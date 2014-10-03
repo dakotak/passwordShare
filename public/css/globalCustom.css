@@ -1,0 +1,8 @@
+body {
+    padding-top: 50px;
+}
+
+.form-register, .form-login {
+    width: 400px;
+    margin: 0 auto;
+}
