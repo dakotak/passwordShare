@@ -10,23 +10,11 @@
     {{ HTML::style('css/globalCustom.css') }}
 </head>
 <body>
-    <!-- Navbar -->
-    <div class="navbar navbar-inverse navbar-fixed-top" role="navigation">
-        <div class="container">
-            <div class="navbar-header">
-                <a class="navbar-brand" href="#">PasswordShare</a>
-            </div>
-                <ul class="nav navbar-nav">
-                    @if(Auth::check())
-                    <li><a href="{{{ URL::to('') }}}">Home</a></li>
-                    <li><a href="{{{ URL::to('user', 'logout') }}}">Logout</a></li>
-                    @else
-                    <li>{{ HTML::link('user/register', 'Register') }}</li>
-                    <li>{{ HTML::link('user/login', 'Login') }}</li>
-                    @endif
-                </ul> 
-        </div>
-    </div>
+    
+    {{-- Navbar --}}
+    @if(!isset($nonav))
+        @include('layouts.navbar')
+    @endif
 
     <!-- Main Container -->
     <div class="container">

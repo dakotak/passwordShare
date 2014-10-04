@@ -1,6 +1,12 @@
 <?php
 
-class userController extends BaseController {
+class UserController extends BaseController {
+
+    public function __construct()
+    {
+        $this->beforeFilter('csrf', array('on'=>'post'));
+        $this->beforeFilter('auth', array('only'=>array('getProfile')));
+    }
 
     /**
      * Show the user registration form.
@@ -54,11 +60,15 @@ class userController extends BaseController {
         if ($validator->passes())
         {
             // Validation has pased, create the user
+            // Create a asymmetric keypair
+            $keys = crypto::create_asymmetric_keypair(3072);
             $user = new User;
             $user->firstName = Input::get('firstname');
             $user->lastName = Input::get('lastname');
             $user->username = Input::get('username');
             $user->password = Hash::make(Input::get('password'));
+            $user->publicKey = $keys['public'];
+            $user->privateKey = $keys['private'];
             $user->save();
 
             return Redirect::to('user/login')->with('message', 'Registration complete.');
@@ -66,5 +76,10 @@ class userController extends BaseController {
             // Validation has failed, display errors
             return Redirect::to('user/register')->with('message', 'The following errors occurred')->withErrors($validator)->withInput();
         }
+    }
+
+    public function getProfile()
+    {
+        return View::make('user.profile');
     }
 }
